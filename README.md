@@ -121,6 +121,8 @@ This endpoint returns a list of available platforms. It accepts the following op
   - `name` — Sorts platforms alphabetically by their name.  
   - `releaseYear` — Sorts platforms by their release year.
 
+ **Default sorting:** If no `sortBy` parameter is provided, games should be sorted alphabetically by `name` in ascending order.
+
 **Example requests:**
 
 - `GET /api/platforms?sortBy=name`  
@@ -133,7 +135,7 @@ This endpoint returns a list of available platforms. It accepts the following op
 
 ## Bonus Goals
 
-1. **Add Pagination**  
+1. DONE-- **Add Pagination**  
    Implement pagination for the `/api/games` endpoint using query parameters like `page` and `limit` to return a subset of results per request.
 
 2. DONE-- **Case-Insensitive Filtering and Sorting**  
