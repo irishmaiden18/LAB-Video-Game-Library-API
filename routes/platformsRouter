@@ -1,0 +1,83 @@
+// import express & uuid
+const express = require("express")
+const uuid = require("uuid")
+
+// set up router
+const router = express.Router()
+
+// import platform data
+let platforms = require("../data/platforms")
+
+// set all the data to lowercase for sorting and searching
+let platformsData = platforms.map((platform) => {
+    return {
+        id: platform.id,
+        name: platform.name.toLowerCase(),
+        releaseYear: platform.releaseYear
+    }
+})
+
+// import sort function
+const sort = require("../utils")
+
+// handle GET requests
+// get a list of platforms
+router.get("/", (req, res) => {
+
+    // use query parameters
+    // if there is no query parameters, platforms should be sorted alphabetically by `name` in ascending order
+    let sortBy = req.query.sortBy || "name"
+
+    // sortBy can be "name" or "releaseYear" but we dont' want to change the case of releaseYear
+    if (sortBy.toLowerCase() === "name") {
+        
+        // set sortBy to lowercase
+        sortBy = sortBy.toLowerCase()
+    }
+
+    // sortBy can be "name" or "releaseYear" but we dont' want releaseYear to be all lower case
+    if (sortBy.toLowerCase() === "releaseyear") {
+
+        // reformat for consistent sorting
+        sortBy = "releaseYear"
+    }
+
+    // call sort function
+    const sortedPlatforms = sort(platformsData, sortBy, "asc")
+
+    // send a response
+    res.json({
+        message: "success",
+        payload: sortedPlatforms
+    })
+})
+
+// get a single platform based on it's uuid
+router.get("/:id", (req, res) => {
+    
+    // See if the platform we are looking for is in out list
+    const foundPlatform = platforms.find((platform) => {
+        return platform.id === Number(req.params.id)
+    })
+
+    // if the platform we are looking for is in our list
+    if (foundPlatform) {
+
+        // send a response
+        res.json({
+            message: "success",
+            payload: foundPlatform
+        })
+    
+    // if the platform we are looking for is NOT in our list
+    } else {
+
+        //send a response
+        res.status(404).json({
+            message: "failure",
+            payload: "The platform you are looking for is NOT in our list"
+        })
+    }
+})
+
+module.exports = router

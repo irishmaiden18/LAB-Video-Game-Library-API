@@ -1,0 +1,26 @@
+{
+  "name": "lab-video-game-library-api",
+  "version": "1.0.0",
+  "description": "In this lab, you'll build a basic Express API to serve a collection of video game data. The data is provided as two JSON files:",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irishmaiden18/LAB-Video-Game-Library-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/irishmaiden18/LAB-Video-Game-Library-API/issues"
+  },
+  "homepage": "https://github.com/irishmaiden18/LAB-Video-Game-Library-API#readme",
+  "dependencies": {
+    "express": "^5.2.1",
+    "lodash": "^4.17.23",
+    "morgan": "^1.10.1",
+    "uuid": "^13.0.0"
+  }
+}
