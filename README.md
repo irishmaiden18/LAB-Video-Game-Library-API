@@ -15,8 +15,6 @@ In this lab, you'll build a basic Express API to serve a collection of video gam
 
 5. DONE -- Your app should filter and sort utilizing query parameters
 
-6. Errors should be handled with `try-catch` blocks.  Appropriate error messages should be sent back to the user. 
-
 ---
 
 ## Routes
@@ -72,7 +70,7 @@ Your API should have a router for Games and a separate route for Platforms.  The
 
 Your application should support filtering and sorting of game and platform data through query parameters on the API endpoints.
 
-***For filtering, you only need to be able to filter by one property at a time. Figuring out how to do multiple would be a BONUS GOAL
+-DONE-- ***For filtering, you only need to be able to filter by one property at a time. Figuring out how to do multiple would be a BONUS GOAL
 
 ## Games Endpoint: `GET /api/games`
 
@@ -121,7 +119,7 @@ This endpoint returns a list of available platforms. It accepts the following op
   - `name` — Sorts platforms alphabetically by their name.  
   - `releaseYear` — Sorts platforms by their release year.
 
- **Default sorting:** If no `sortBy` parameter is provided, games should be sorted alphabetically by `name` in ascending order.
+-DONE-- **Default sorting:** If no `sortBy` parameter is provided, games should be sorted alphabetically by `name` in ascending order.
 
 **Example requests:**
 

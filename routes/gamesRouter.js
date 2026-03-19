@@ -51,137 +51,113 @@ router.get("/", (req, res) => {
     // call sort function
     const sortedGames = sort(gamesData, sortBy, orderCased)
 
-    
+    // create a results array and assign it to sortedGames
+    let results = sortedGames
+
     // if there is a query parameter "platform", e.g. ?platform=PC
     if (req.query.platform) {
 
         // create a results array made up of all games that list that platform in their platforms property
-        const results = sortedGames.filter((game) => {
+        results = results.filter((game) => {
             return game.platforms.includes(req.query.platform.toLowerCase())
         })
-
-        // if the results array exists
-        if (results.length > 0) {
-
-            // send a response including the games that work on the querried platform
-            res.json({
-                message: "success",
-                payload: results
-            })
-
-        // if there are no games in the results array
-        } else {
-
-            // send a response that includes an empty array
-            res.status(404).json({
-                message: "failure",
-                messageDetail: "There are no games that work on the queried platform",
-                payload: []
-            })
-        }
     
     // else if there is a query parameter "genre", e.g. ?genre=RPG
-    } else if (req.query.genre) {
+    } 
+    if (req.query.genre) {
 
         // create a results array made up of all games that list that genre of game play in their genres property
-        const results = sortedGames.filter((game) => {
+        results = results.filter((game) => {
             return game.genres.includes(req.query.genre.toLowerCase())
         })
 
-        // if the results array exists
-        if (results.length > 0) {
-
-            // send a response including the games that use the querried game play genre
-            res.json({
-                message: "success",
-                payload: results 
-            })
-        // if there are no games in the results array
-        } else {
-
-            // send a response
-            res.status(404).json({
-                message: "failure",
-                messageDetail: "There are no games that in the queried genre",
-                payload: []
-            })
-        }
-
     // else if there is a query parameter "year", e.g. ?year=2025
-    } else if (req.query.year) {
+    }
+    if (req.query.year) {
 
         // create a results array made up of all the games that were released in the queried year, have the queried year in their "releaseYear" property
-        const results = sortedGames.filter((game) => {
+        results = results.filter((game) => {
             return game.releaseYear === Number(req.query.year)
         })
-
-        // if the results array exists
-        if (results.length > 0) {
-
-            // send a response including the games released in the queried year
-            res.json({
-                message: "success",
-                payload: results
-            })
-
-        // if there are no games in the results array
-        } else {
-
-            // send a response
-            res.status(404).json({
-                message: "failure",
-                messageDetail: "There are no games released in the year queried",
-                payload: []
-            })
-        }
+    }
     
-    // else if there is a query parameter "page" e.g. ?page=3
-    } else if (req.query.page) {
+    // if there is a query parameter "page" e.g. ?page=3
+    if (req.query.page) {
 
         // 10 items will show per page
         const itemsPerPage = 10
 
         //calculate the number of pages required to display all the data
-        let totalPages = Math.ceil(sortedGames.length / itemsPerPage)
+        let totalPages = Math.ceil(results.length / itemsPerPage)
         // console.log(`total pages: ${totalPages}`)
 
-        // get the requested page from the user
-        const requestedPage = req.query.page
+        // get the requested page from the user, must convert to a number as it comes back as a string
+        const requestedPage = Number(req.query.page)
 
         // if the requested page is less than or equal to the total number of pages required to display all the data
         if (requestedPage <= totalPages) {
 
-            // get the start index of items to display based on the requested page and items per page
-            startIndex = (requestedPage * itemsPerPage) - (requestedPage - 1) * itemsPerPage
+            // if requestedPage is 1
+            if (requestedPage === 1) {
+
+                //set the start index of items to zero
+                startIndex = 0
+
+            // if requestedPage > 1
+            } else if (requestedPage > 1) {
+
+                // get the start index of items to display based on the requested page and items per page
+                startIndex = (requestedPage * itemsPerPage) - (requestedPage - 1) * itemsPerPage
+
+            // if requested page is less than 1
+            } else {
+
+                // send a failure response to the user
+                res.status(500).json ({
+                    message: "failure",
+                    payload: `Inappropriate number of pages, page must be at least 1. Page entered: ${requestedPage}`
+                })
+            }
 
             // get the end index by adding the itemsPerPage to the start index
             endIndex = startIndex + itemsPerPage
 
             // create a limited list of items to display using the start and end indexes calculated above
-            limitedList = sortedGames.slice(startIndex, endIndex)
+            limitedList = results.slice(startIndex, endIndex)
 
-            // send a response with the limited list
+            // send a response to the user with the limited list
             res.json({
                 message: "success",
                 payload: limitedList
             })
-        // else if the requested page is greater than the total pages required to display the data
+
+        // else if the requested page is greater than the total pages required to display all the queried data
         } else if (requestedPage > totalPages) {
 
-            // send an error response
+            // send an error response to the user
             res.status(500).json({
                 message: "failure",
-                payload: `There are only ${totalPages} pages of games, please use a number less than ${totalPages}`
+                payload: `There are only ${totalPages} pages of games, please use a number less than or equal to ${totalPages}`
             })
         }
 
-    // if there are no query parameters
-    } else {
+    // if the results array contains at least one game
+    } else if (results.length > 0) {
 
-        // send a response with all the games
+        // send a success response to the user including the results array
         res.json({
             message: "success",
-            payload: sortedGames
+            payload: results
+        })
+
+    // if there are no games in the results array
+    } else {
+
+        // send a failure response to the user
+        res.status(404).json({
+            message: "failure",
+            messageDetail: "There are no results to your query!",
+            payload: []
         })
     }
 })
