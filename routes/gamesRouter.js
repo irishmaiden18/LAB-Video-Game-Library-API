@@ -242,7 +242,7 @@ router.put("/:id", (req, res)=> {
     // if the game is in our list
     if (foundGame) {
 
-        // create a new object to update the game with that features the properieis the user is giving (other than the ID) -- this prevents the user from updating an id
+        // create a new object to update the game with that features the properies the user is giving (other than the ID) -- this prevents the user from updating an id
         const gameToUpdate = {
             name: req.body.name || foundGame.name,
             genres: req.body.genres || foundGame.genres,
